@@ -12,9 +12,11 @@
     <script src="https://d3js.org/topojson.v2.min.js"></script>
 
     <script src="javascript/colorLegend.js"></script>
+    <script src="javascript/annotation.js"></script>
     <script src="javascript/worldMap.js"></script>
     <script src="javascript/loadData.js"></script>
     <script src="javascript/helper.js"></script>
+
 
 </head>
 <body>
@@ -77,8 +79,6 @@
 
         const svg = d3.select('svg');
 
-
-
         const colorScale = d3.scaleLinear();
 
         const choroplethMapG = svg.append('g');
@@ -86,7 +86,12 @@
         const colorLegendG = svg.append('g')
             .attr('transform', `translate(120,310)`);
 
+        const annotatoinG = svg.append('g')
+            .attr('transform', `translate(410,400)`);
+
         const colorValue = d => d.properties["Younger Population"];
+
+        const property = "Younger Population";
 
         let features;
 
@@ -99,7 +104,7 @@
         //};
 
         function loadandFilterDataAndRenderMap(targetYear) {
-            loadAndFilterData(targetYear, 'data.csv').then(countries => {
+            loadAndFilterData(targetYear, 'data.csv').then(countries => {                
                 render(countries.features, targetYear);
             });
         }
@@ -138,6 +143,10 @@
                 .attr("class", "mapHeader")
                 .text(targetYear);
 
+            annotatoinG.call(annotation, {
+                features,
+                property
+            });
 
         }
 

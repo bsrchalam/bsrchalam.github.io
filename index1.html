@@ -13,6 +13,7 @@
 
 
     <script src="javascript/colorLegend.js"></script>
+    <script src="javascript/annotation.js"></script>
     <script src="javascript/worldMap.js"></script>
     <script src="javascript/loadData.js"></script>
     <script src="javascript/helper.js"></script>
@@ -69,8 +70,8 @@
             <svg width="1024" height="550"></svg>
         </div>
 
-        <h5 class="thirdHeader"><sup>*</sup>For this study adults between 16 and 55 are tagged as Working population (to create some lenancy for countries with shorter lifespan)  </h5>        
-        <h5 class="thirdHeader"><sup>+</sup>Data source: UN World Annual Popoulation by Age as of 1st July of the year until 2019 </h5>
+        <h5 class="thirdHeader"><sup>*</sup>For this study adults between 16 and 55 are tagged as Working population (This is to create some leniency for countries with shorter lifespan)  </h5>        
+        <h5 class="thirdHeader"><sup>+</sup>Data source: UN World Annual Population by Age as of 1st July of the year until 2019 </h5>
         <h5 class="thirdHeader"><sup>++</sup>Data source: UN World population probabilistic projections from 2020 </h5>
     </div>
 
@@ -88,8 +89,12 @@
         const colorLegendG = svg.append('g')
             .attr('transform', `translate(120,310)`);
 
+        const annotatoinG = svg.append('g')
+            .attr('transform', `translate(410,400)`);
+
+
         const colorValue = d => d.properties["Working Population"];
-        
+        const property = "Working Population";
        
         function loadandFilterDataAndRenderMap(targetYear) {
             loadAndFilterData(targetYear, 'data.csv').then(countries => {
@@ -131,6 +136,10 @@
                 .attr("class", "mapHeader")
                 .text(targetYear);
 
+            annotatoinG.call(annotation, {
+                features,
+                property
+            });
          
         }
 

@@ -28,7 +28,7 @@ function togglePlayPause(altText) {
 
                 document.getElementById(year.toString()).click();
 
-            }, 2000);
+            }, 3000);
 
 
     }
