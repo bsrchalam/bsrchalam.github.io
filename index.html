@@ -1,15 +1,252 @@
 <html>
 
 <head>
-<title>Home</title>
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-<link rel="manifest" href="/site.webmanifest">
+    <title>Working Population Demographics</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <script src="javascript/colorLegend.js"></script>
+    <script src="javascript/worldMap.js"></script>
+    <script src="javascript/loadData.js"></script>
+
+    <style>
+        body {
+            margin: 0px;
+            
+            background-color: white;
+            width: 1200px;
+            height: 600px;
+            
+        }
+
+        .sphere {
+            fill: darkblue;
+        }
+
+        .country {
+            stroke: black;
+            stroke-width: 0.05px;
+        }
+
+        .country:hover {
+            fill: white;
+        }
+
+        .yearSelector {
+            vertical-align:top;
+            display: inline-block;
+            width: 80px;
+            height: 500px;            
+            padding-top: 150px;
+            
+        }
+
+        .yearRadio {
+            margin-bottom: 10px;
+            margin-top: 10px;
+            border: solid 2px red;
+        }
+
+        .worldmap {
+            display: inline-block;
+            width: 1020px;
+            height: 500px;
+            
+        }
+
+        .tick text {
+            font-size: 1em;
+            fill: black;
+            font-family: sans-serif;
+        }
+
+        .tick circle {
+            stroke: black;
+            stroke-opacity: 0.5;
+        }
+
+    </style>
 </head>
 <body>
+    <div style="text-align:center">
+        <h1>Working Population Demographics (Ages: 16 - 55)</h1>
+        <div class="worldmap">
+            <svg width="1250" height="500"></svg>
+        </div>
+        <div class="yearSelector">
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1950" name="year" value="1950">
+            <label for="year">1950</label><br>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1960" name="year" value="1960">
+            <label for="year">1960</label><br>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1970" name="year" value="1970">
+            <label for="year">1970</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1980" name="year" value="1980">
+            <label for="year">1980</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1990" name="year" value="1990">
+            <label for="year">1990</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2000" name="year" value="2000">
+            <label for="year">2000</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2010" name="year" value="2010">
+            <label for="year">2010</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2020" name="year" value="2020" checked="checked">
+            <label for="year">2020</label>
+        </div>
 
-<h1>Home</h1>
+
+    </div>
+
+
+    <script>
+
+            
+
+        const svg = d3.select('svg');
+
+        const projection = d3.geoEqualEarth();
+        const path = d3.geoPath(projection);
+
+      
+        const choroplethMapG = svg.append('g');
+
+        const colorLegendG = svg.append('g')
+            .attr('transform', `translate(110,310)`);
+
+        const colorValue = d => d.properties["Working Population"];
+        
+        let selectedColorValue;
+        
+        const onClick = d => {
+          selectedColorValue = d;
+          render();
+        };
+
+       render("2020");
+                     
+       function render(targetYear) {
+
+           loadAndFilterData(targetYear).then(countries => {
+
+               const colorScale = d3.scaleThreshold()
+                   .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
+                   .range(d3.schemeRdYlGn[6]);
+
+               colorLegendG.call(colorLegend, {
+                   colorScale,
+                   circleRadius: 8,
+                   spacing: 20,
+                   textOffset: 20,
+                   backgroundRectWidth: 90,
+                   onClick,
+                   selectedColorValue
+               });
+
+               let features = countries.features;
+               choroplethMapG.call(worldMap, path, {
+                   features,
+                   colorScale,
+                   colorValue,
+                   selectedColorValue
+               });
+
+           });
+
+        }
+        
+        function changeYear(year)
+        {
+            render(year);
+        }
+
+    </script>
+
+
+    <!--    <script>
+
+            const svg = d3.select('svg');
+
+
+            const projection = d3.geoEqualEarth();
+            const path = d3.geoPath(projection);
+
+
+
+            const g = svg.append('g');
+
+
+            g.append('path')
+            .attr('class', 'sphere')
+                .attr('d', path({type: 'Sphere' }));
+
+            svg.call(d3.zoom()
+                .on('zoom', () => {
+                g.attr('transform', d3.event.transform);
+                }));
+
+
+            var targetYear = "2020";
+
+            const width = +svg.attr('width');
+            const height = +svg.attr('height');
+
+            Promise.all([
+                d3.csv('data.csv'),
+                d3.json('countries-50m.json')
+            ]).then(([allData, countryData]) => {
+
+                var data = allData.filter(function (row) { return row.Year === targetYear; });
+
+                const rowByCode = data.reduce((accumulator, d) => {
+                accumulator[d.code] = d;
+                    return accumulator;
+                }, {});
+
+                const rowByName = data.reduce((accumulator, d) => {
+                accumulator[d.country] = d;
+                    return accumulator;
+                }, {});
+
+                const countries = topojson.feature(countryData, countryData.objects.countries);
+
+                countries.features.forEach(d => {
+                Object.assign(d.properties, rowByCode[d.id]);
+                    Object.assign(d.properties, rowByName[d.properties.name]);
+                });
+
+
+                const colorScale = d3.scaleThreshold()
+                    .domain([0.2, 0.25, 0.35, 0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
+                    .range(d3.schemeRdYlGn[10]);
+
+                g.selectAll('path')
+                    .data(countries.features)
+                    .enter().append('path')
+                    .attr('class', 'country')
+                    .attr('d', path)
+                    .attr('fill',
+                        function (d) { return d.properties["Working Population"] == undefined ? colorScale(0.2) : colorScale(d.properties["Working Population"]); } )
+                    .append('title')
+                    .text(d => //console.log(d)
+                        d.properties.name + " - " + (d.properties["Working Population"] == undefined ? 'Not Available' : new Intl.NumberFormat('en-US', {style: 'percent', minimumFractionDigits: 1 }).format(d.properties["Working Population"]))
+                                );
+
+
+            });
+
+
+
+
+    </script>-->
+
 
 </body>
 
