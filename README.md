@@ -4,7 +4,7 @@ GitHub Pages:
 
 https://bsrchalam.github.io/
 
-Choropleth Map with Interactive Filtering
+Choropleth Maps with Interactive Slide Show Option
 
 Sources: 
 
@@ -14,4 +14,5 @@ Population data: https://population.un.org/wpp/Download/Standard/Interpolated/
             Age composition
             Annual Population by Age - Both Sexes (XLSX, 33.99 MB)
 
-Data Aggregated and Percetages Calculated and then Data applied to World Maps
+Data Aggregated and Percetages Calculated and then Data applied to World Map
+

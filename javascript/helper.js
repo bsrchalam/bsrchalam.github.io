@@ -13,6 +13,7 @@ function togglePlayPause(altText) {
 
     if (altText === 'play') {
         x.alt = 'pause';
+        x.title = 'pause';
         x.classList.remove('playinputUrl');
         x.classList.add('pauseinputUrl');
 
@@ -33,6 +34,7 @@ function togglePlayPause(altText) {
     }
     else {
         x.alt = 'play'
+        x.title = 'play';
         x.classList.remove('pauseinputUrl');
         x.classList.add('playinputUrl');
         clearInterval(interval);

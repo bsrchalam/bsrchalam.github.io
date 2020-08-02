@@ -26,8 +26,8 @@
             <a href="index1.html" class="notselected">Working Age Population</a>&nbsp;
             <a href="index2.html" class="selected">Elderly Population</a>
         </div>
-        <h2 class="secondHeader">Elderly population movements between 1950 - 2100</h2>
-     
+        <h2 class="secondHeader">Elderly population<sup>*</sup> percentage pattern between 1950<sup>+</sup> - 2100<sup>++</sup></h2>
+
         <div class="yearSelector">
             <input type="button" class="playpauseinput playinputUrl" id="playPauseInput" value="" onclick="togglePlayPause(this.alt)" alt="play" />
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1950" name="year" value="1950">
@@ -66,9 +66,12 @@
 
 
         <div class="worldmap">
-            <svg width="1024" height="680"></svg>
+            <svg width="1024" height="550"></svg>
         </div>
 
+        <h5 class="thirdHeader"><sup>*</sup>For this study adults above 55 are tagged as Elderly population (to create some lenancy for countries with shorter lifespan)  </h5>        
+        <h5 class="thirdHeader"><sup>+</sup>Data source: UN World Annual Popoulation by Age as of 1st July of the year until 2019 </h5>
+        <h5 class="thirdHeader"><sup>++</sup>Data source: UN World population probabilistic projections from 2020 </h5>
     </div>
 
 
@@ -83,7 +86,7 @@
         const choroplethMapG = svg.append('g');
 
         const colorLegendG = svg.append('g')
-            .attr('transform', `translate(110,310)`);
+            .attr('transform', `translate(120,310)`);
 
         const colorValue = d => d.properties["Elder Population"];
 
@@ -105,7 +108,7 @@
                    circleRadius: 8,
                    spacing: 20,
                    textOffset: 20,
-                   backgroundRectWidth: 90,
+                   backgroundRectWidth: 70,
                    //onClick,
                    //selectedColorValue,
                    targetYear

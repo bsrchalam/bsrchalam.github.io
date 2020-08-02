@@ -27,6 +27,9 @@ function colorLegend (selection, props) {
         .attr('fill', 'white')
         .attr('opacity', 0.8);
 
+    //selection.call(d3.zoom().on('zoom', () => {
+    //    g.attr('transform', d3.event.transform);
+    //}));
     
     const legendGroups = selection.selectAll('.tick')
         .data(colorScale.domain());

@@ -16,7 +16,16 @@ body {
 }
 
 .secondHeader {
+    margin: 2px 0px 8px 0px;
     text-align: center;
+    
+}
+
+.thirdHeader {
+    
+    margin: 1px 0px 1px 0px;
+    text-align: left;
+    
 }
 
 .sphere {
@@ -32,12 +41,14 @@ body {
     fill: white;
 }
 
+
 .yearSelector {
+    margin-bottom: 10px;
+    background-image: linear-gradient(to right, mediumpurple, white);
     vertical-align: top;
     text-align: center;
     width: 1005px;
     height: 30px;
-    
 }
 
 
@@ -54,16 +65,24 @@ body {
 }
 
 .playpauseinput {
-    width: 32px;
-    height: 32px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    width: 30px;
+    height: 30px;
+    background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    border: none;
-    background-color: white;
-    vertical-align: bottom;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: mediumpurple;
+    vertical-align: top;
+    stroke: mediumpurple;
+    stroke-opacity: 0.5;
 }
 
-
+    .playpauseinput::selection {
+        border: none;
+    }
     .playpauseinput.playinputUrl {
         background-image: url(circled-play.png);
     }
@@ -81,9 +100,10 @@ body {
     cursor: pointer;
 }*/
 .tick text {
-    font-size: 1em;
+    font-size: 14px;
+    font-weight:bold;
     fill: black;
-    font-family: sans-serif;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .tick circle {
