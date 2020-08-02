@@ -1,5 +1,8 @@
 
-function worldMap(selection, pathGenerator, props) {
+const projection = d3.geoEqualEarth();
+const pathGenerator = d3.geoPath().projection(projection);
+
+function worldMap(selection,  props) {
     const {
         features,
         colorScale,
@@ -19,7 +22,7 @@ function worldMap(selection, pathGenerator, props) {
         .attr('opacity', selectedColorValue ? 0.05 : 1);
 
     selection.call(d3.zoom().on('zoom', () => {
-        g.attr('transform', event.transform);
+        g.attr('transform', d3.event.transform);
     }));
 
     const countryPaths = g.selectAll('.country')
@@ -28,11 +31,12 @@ function worldMap(selection, pathGenerator, props) {
     const countryPathsEnter = countryPaths
         .enter().append('path')
         .attr('class', 'country');
-
+   
     countryPaths
         .merge(countryPathsEnter)
         .attr('d', pathGenerator)
-        .attr('fill', function (d) { return d.properties["Working Population"] === undefined ? colorScale(0.2) : colorScale(d.properties["Working Population"]); })
+        .attr('fill', d => colorScale(colorValue(d)))
+       // .attr('fill', function (d) { return d.properties["Working Population"] === undefined ? colorScale(0.2) : colorScale(d.properties["Working Population"]); })
         .attr('opacity', d =>
             (!selectedColorValue || selectedColorValue === colorValue(d))
                 ? 1
@@ -40,13 +44,14 @@ function worldMap(selection, pathGenerator, props) {
         )
         .classed('highlighted', d =>
             selectedColorValue && selectedColorValue === colorValue(d)
-    )
+            )
 
-    countryPathsEnter.append('title')
+    countryPaths.selectAll('title').remove();
+
+    countryPaths.append('title')
         .text(d => d.properties.name + " - "
             + (d.properties["Working Population"] === undefined ? 'Not Available' : new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 1 }).format(d.properties["Working Population"]))
         );
-
 
 
 }

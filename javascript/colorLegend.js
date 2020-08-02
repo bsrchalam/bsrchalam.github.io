@@ -8,12 +8,15 @@ function colorLegend (selection, props) {
         textOffset,
         backgroundRectWidth,
         onClick,
-        selectedColorValue
+        selectedColorValue,
+        targetYear
     } = props;
 
     const backgroundRect = selection.selectAll('rect')
         .data([null]);
+
     const n = colorScale.domain().length;
+
     backgroundRect.enter().append('rect')
         .merge(backgroundRect)
         .attr('x', -circleRadius * 2)
@@ -24,38 +27,31 @@ function colorLegend (selection, props) {
         .attr('fill', 'white')
         .attr('opacity', 0.8);
 
-    //console.log(colorScale.domain());
-
-    const groups = selection.selectAll('.tick')
+    
+    const legendGroups = selection.selectAll('.tick')
         .data(colorScale.domain());
-    const groupsEnter = groups
+
+    const legendGroupsEnter = legendGroups
         .enter().append('g')
         .attr('class', 'tick');
 
-    groupsEnter
-        .merge(groups)
+    legendGroupsEnter
+        .merge(legendGroups)
         .attr('transform', (d, i) =>
             `translate(0, ${i * spacing})`
         )
-        .attr('opacity', d =>
-            (!selectedColorValue || d === selectedColorValue)
-                ? 1
-                : 0.2
-        )
-        .on('click', d => onClick(
-            d === selectedColorValue
-                ? null
-                : d
-        ));
-    groups.exit().remove();
+        .attr('opacity', d => (!selectedColorValue || d === selectedColorValue) ? 1 : 0.2 )
+        .on('click', d => onClick(d === selectedColorValue ? null : d, targetYear));
 
-    groupsEnter.append('circle')
-        .merge(groups.select('circle'))
+    legendGroups.exit().remove();
+
+    legendGroupsEnter.append('circle')
+        .merge(legendGroups.select('circle'))
         .attr('r', circleRadius)
         .attr('fill', colorScale);
 
-    groupsEnter.append('text')
-        .merge(groups.select('text'))
+    legendGroupsEnter.append('text')
+        .merge(legendGroups.select('text'))
         .text(d => new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 0 }).format(d))
         .attr('dy', '0.32em')
         .attr('x', textOffset);

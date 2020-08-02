@@ -12,8 +12,8 @@
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
-    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    
 
     <script src="javascript/colorLegend.js"></script>
     <script src="javascript/worldMap.js"></script>
@@ -23,6 +23,9 @@
 <body>
     <div>
         <h1 class="header">World Population Demographics (Ages: 16 - 55)</h1>
+        <div class="sceneMenu">
+            <a href="index.html" class="selected">1950-2020</a>&nbsp;<a href="index1.html" class="notselected">2021-2100</a>
+        </div>
         <h2 class="secondHeader">Working Age Population Movements between 1950 - 2020</h2>
         <div class="yearSelector">
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1950" name="year" value="1950">
@@ -42,76 +45,81 @@
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2020" name="year" value="2020" checked="checked">
             <label for="year">2020</label>
         </div>
-
+       
         <div class="worldmap">
             <svg width="1024" height="680"></svg>
-            <div>
-                <a href="index.html" class="selected" >1950-2020</a>&nbsp;<a href="index1.html"  class="notselected">2021-2100</a>
-            </div>
         </div>
 
     </div>
 
+    
 
     <script>
 
-            
+        
+
+
 
         const svg = d3.select('svg');
 
-        const projection = d3.geoEqualEarth().rotate([-15, 0]);
-        const path = d3.geoPath(projection);
+        //const projection = d3.geoEqualEarth().rotate([-15, 0]);
+        //const path = d3.geoPath(projection);
+        const colorScale = d3.scaleLinear();
 
-      
         const choroplethMapG = svg.append('g');
 
         const colorLegendG = svg.append('g')
             .attr('transform', `translate(110,310)`);
 
         const colorValue = d => d.properties["Working Population"];
-        
+
+        let features;
         let selectedColorValue;
-        
-        const onClick = d => {
-          selectedColorValue = d;
-          render();
+        let targetYear = "2020";
+
+        loadandFilterDataAndRenderMap(targetYear);
+
+        const onClick = (d, targetYear) => {
+            selectedColorValue = d;
+            loadandFilterDataAndRenderMap(targetYear);
         };
 
-       render("2020");
-                     
-       function render(targetYear) {
+        function loadandFilterDataAndRenderMap(targetYear) {
+            loadAndFilterData(targetYear, 'data.csv').then(countries => {
+                render(countries.features, targetYear);
+            });
+        }
 
-           loadAndFilterData(targetYear, 'data.csv').then(countries => {
+        function render(features, targetYear) {
 
-               const colorScale = d3.scaleThreshold()
-                   .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
-                   .range(d3.schemeRdYlGn[6]);
+            colorScale //= d3.scaleThreshold()
+                .domain(features.map(colorValue))
+                .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
+                .range(d3.schemeRdYlGn[6]);
 
-               colorLegendG.call(colorLegend, {
-                   colorScale,
-                   circleRadius: 8,
-                   spacing: 20,
-                   textOffset: 20,
-                   backgroundRectWidth: 90,
-                   onClick,
-                   selectedColorValue
-               });
+            colorLegendG.call(colorLegend, {
+                colorScale,
+                circleRadius: 8,
+                spacing: 20,
+                textOffset: 20,
+                backgroundRectWidth: 90,
+                onClick,
+                selectedColorValue,
+                targetYear
+            });
 
-               let features = countries.features;
-               choroplethMapG.call(worldMap, path, {
-                   features,
-                   colorScale,
-                   colorValue,
-                   selectedColorValue
-               });
 
-           });
+            choroplethMapG.call(worldMap, {
+                features,
+                colorScale,
+                colorValue,
+                selectedColorValue
+            });
 
         }
-        
-        function changeYear(year)
-        {
-            render(year);
+
+        function changeYear(year) {
+            loadandFilterDataAndRenderMap(year);
         }
 
     </script>

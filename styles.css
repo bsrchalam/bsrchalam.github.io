@@ -2,7 +2,8 @@ body {
     background-color: white;
     border: 2px solid black;
     width: 1000px;
-    height: 700px;
+    height: 750px;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .header {
@@ -11,6 +12,7 @@ body {
     border: 2px solid black;
     border-left: none;
     border-right: none;
+    border-top: none;
 }
 
 .secondHeader {
@@ -37,6 +39,7 @@ body {
     height: 30px;
 }
 
+
 .yearRadio {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -45,6 +48,11 @@ body {
 
 .worldmap {
     padding-left: 20px;
+    
+}
+
+.tick {
+    cursor: pointer;
 }
 
 .tick text {
@@ -82,4 +90,9 @@ a.notselected:link, a.notselected:visited {
 
 a.notselected:hover, a.notselected:active {
     background-color: blue;
+}
+
+.sceneMenu {
+    text-align:center;
+    
 }

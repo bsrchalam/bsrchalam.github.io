@@ -11,8 +11,7 @@
     <script src="https://d3js.org/d3-array.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
-    <script src="https://d3js.org/d3-color.v1.min.js"></script>
-    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>    
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 
     <script src="javascript/colorLegend.js"></script>
@@ -23,9 +22,11 @@
 <body>
     <div>
         <h1 class="header">World Population Demographics (Ages: 16 - 55)</h1>
+        <div class="sceneMenu">
+            <a href="index.html" class="notselected">1950-2020</a>&nbsp;<a href="index1.html" class="selected">2021-2100</a>
+        </div>
         <h2 class="secondHeader">Working Age Population Future Projections between 2021 - 2100</h2>
-        
-        <div class="yearSelector">
+        <div class="yearSelector">            
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2030" name="year" value="2030" checked="checked">
             <label for="year">2030</label>
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2040" name="year" value="2040">
@@ -46,24 +47,18 @@
 
         <div class="worldmap">
             <svg width="1024" height="680"></svg>
-            <div>
-                <a href="index.html" class="notselected">1950-2020</a>&nbsp;<a href="index1.html" class="selected">2021-2100</a>
-            </div>
         </div>
-
 
     </div>
 
 
     <script>
 
-
-
         const svg = d3.select('svg');
 
-        const projection = d3.geoEqualEarth();
-        const path = d3.geoPath(projection);
-
+        //const projection = d3.geoEqualEarth().rotate([-15, 0]);
+        //const path = d3.geoPath(projection);
+        const colorScale = d3.scaleLinear();
 
         const choroplethMapG = svg.append('g');
 
@@ -72,20 +67,27 @@
 
         const colorValue = d => d.properties["Working Population"];
 
+        let features;
         let selectedColorValue;
+        let targetYear = "2030";
 
-        const onClick = d => {
-          selectedColorValue = d;
-          render();
+        loadandFilterDataAndRenderMap(targetYear);
+
+        const onClick = (d, targetYear) => {
+            selectedColorValue = d;
+            loadandFilterDataAndRenderMap(targetYear);
         };
 
-       render("2030");
+        function loadandFilterDataAndRenderMap(targetYear) {
+            loadAndFilterData(targetYear, 'data2.csv').then(countries => {
+                render(countries.features, targetYear);
+            });
+        }
 
-       function render(targetYear) {
-
-           loadAndFilterData(targetYear, 'data2.csv').then(countries => {
-
-               const colorScale = d3.scaleThreshold()
+        function render(features, targetYear) {
+         
+               colorScale //= d3.scaleThreshold() 
+                   .domain(features.map(colorValue))
                    .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
                    .range(d3.schemeRdYlGn[6]);
 
@@ -96,24 +98,22 @@
                    textOffset: 20,
                    backgroundRectWidth: 90,
                    onClick,
-                   selectedColorValue
+                   selectedColorValue,
+                   targetYear
                });
 
-               let features = countries.features;
-               choroplethMapG.call(worldMap, path, {
+               
+               choroplethMapG.call(worldMap,  {
                    features,
                    colorScale,
                    colorValue,
                    selectedColorValue
                });
-
-           });
-
+         
         }
 
-        function changeYear(year)
-        {
-            render(year);
+        function changeYear(year) {
+            loadandFilterDataAndRenderMap(year);
         }
 
     </script>
