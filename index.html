@@ -7,27 +7,27 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="https://d3js.org/d3.v5.js"></script>
-    
-    <script src="https://d3js.org/d3-geo.v1.min.js"></script>
-    <script src="https://d3js.org/topojson.v2.min.js"></script>
-    <script src="https://d3js.org/d3-color.v1.min.js"></script>
 
-    
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
 
     <script src="javascript/colorLegend.js"></script>
     <script src="javascript/worldMap.js"></script>
     <script src="javascript/loadData.js"></script>
+    <script src="javascript/helper.js"></script>
 
 </head>
 <body>
     <div>
-        <h1 class="header">World Population Demographics (Ages: 16 - 55)</h1>
+        <h1 class="header">World Population Demographics</h1>
         <div class="sceneMenu">
-            <a href="index.html" class="selected">1950-2020</a>&nbsp;<a href="index1.html" class="notselected">2021-2100</a>
+            <a href="index.html" class="selected">Young Population</a>&nbsp;
+            <a href="index1.html" class="notselected">Working Age Population</a>&nbsp;
+            <a href="index2.html" class="notselected">Elderly Population</a>
         </div>
-        <h2 class="secondHeader">Working Age Population Movements between 1950 - 2020</h2>
+        <h2 class="secondHeader">Young population movements between 1950 - 2100</h2>        
         <div class="yearSelector">
+            <input type="button" class="playpauseinput playinputUrl" id="playPauseInput" value="" onclick="togglePlayPause(this.alt)" alt="play" />
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1950" name="year" value="1950">
             <label for="year">1950</label>
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1960" name="year" value="1960">
@@ -44,8 +44,24 @@
             <label for="year">2010</label>
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2020" name="year" value="2020" checked="checked">
             <label for="year">2020</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2030" name="year" value="2030">
+            <label for="year">2030</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2040" name="year" value="2040">
+            <label for="year">2040</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2050" name="year" value="2050">
+            <label for="year">2050</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2060" name="year" value="2060">
+            <label for="year">2060</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2070" name="year" value="2070">
+            <label for="year">2070</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2080" name="year" value="2080">
+            <label for="year">2080</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2090" name="year" value="2090">
+            <label for="year">2090</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2100" name="year" value="2100">
+            <label for="year">2100</label>
         </div>
-       
+
         <div class="worldmap">
             <svg width="1024" height="680"></svg>
         </div>
@@ -56,14 +72,10 @@
 
     <script>
 
-        
-
-
-
         const svg = d3.select('svg');
 
-        //const projection = d3.geoEqualEarth().rotate([-15, 0]);
-        //const path = d3.geoPath(projection);
+       
+
         const colorScale = d3.scaleLinear();
 
         const choroplethMapG = svg.append('g');
@@ -71,30 +83,29 @@
         const colorLegendG = svg.append('g')
             .attr('transform', `translate(110,310)`);
 
-        const colorValue = d => d.properties["Working Population"];
+        const colorValue = d => d.properties["Younger Population"];
 
-        let features;
-        let selectedColorValue;
-        let targetYear = "2020";
+        let features;       
+        
+        //loadandFilterDataAndRenderMap(targetYear);
 
-        loadandFilterDataAndRenderMap(targetYear);
-
-        const onClick = (d, targetYear) => {
-            selectedColorValue = d;
-            loadandFilterDataAndRenderMap(targetYear);
-        };
+        //let selectedColorValue;
+        //const onClick = (d, targetYear) => {
+        //    selectedColorValue = d;
+        //    loadandFilterDataAndRenderMap(targetYear);
+        //};
 
         function loadandFilterDataAndRenderMap(targetYear) {
             loadAndFilterData(targetYear, 'data.csv').then(countries => {
                 render(countries.features, targetYear);
             });
         }
-
+      
         function render(features, targetYear) {
 
             colorScale //= d3.scaleThreshold()
                 .domain(features.map(colorValue))
-                .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
+                .domain([0.1, 0.2, 0.3, 0.40, 0.5, 0.6])
                 .range(d3.schemeRdYlGn[6]);
 
             colorLegendG.call(colorLegend, {
@@ -103,8 +114,8 @@
                 spacing: 20,
                 textOffset: 20,
                 backgroundRectWidth: 90,
-                onClick,
-                selectedColorValue,
+                //onClick,
+                //selectedColorValue,
                 targetYear
             });
 
@@ -112,95 +123,31 @@
             choroplethMapG.call(worldMap, {
                 features,
                 colorScale,
-                colorValue,
-                selectedColorValue
+                colorValue//,
+                //selectedColorValue
             });
 
+            svg.selectAll('.mapHeader').remove();
+            
+            svg.append("text")
+                .attr("x", 500)
+                .attr("y", 500)                
+                .attr("class","mapHeader")                      
+                .text(targetYear);
+
+
         }
 
-        function changeYear(year) {
-            loadandFilterDataAndRenderMap(year);
-        }
+        let targetYear = "2020";
+
+       
+        document.getElementById(targetYear).click();
+        document.getElementById("playPauseInput").click();
+
+        
+
 
     </script>
-
-
-    <!--    <script>
-
-            const svg = d3.select('svg');
-
-
-            const projection = d3.geoEqualEarth();
-            const path = d3.geoPath(projection);
-
-
-
-            const g = svg.append('g');
-
-
-            g.append('path')
-            .attr('class', 'sphere')
-                .attr('d', path({type: 'Sphere' }));
-
-            svg.call(d3.zoom()
-                .on('zoom', () => {
-                g.attr('transform', d3.event.transform);
-                }));
-
-
-            var targetYear = "2020";
-
-            const width = +svg.attr('width');
-            const height = +svg.attr('height');
-
-            Promise.all([
-                d3.csv('data.csv'),
-                d3.json('countries-50m.json')
-            ]).then(([allData, countryData]) => {
-
-                var data = allData.filter(function (row) { return row.Year === targetYear; });
-
-                const rowByCode = data.reduce((accumulator, d) => {
-                accumulator[d.code] = d;
-                    return accumulator;
-                }, {});
-
-                const rowByName = data.reduce((accumulator, d) => {
-                accumulator[d.country] = d;
-                    return accumulator;
-                }, {});
-
-                const countries = topojson.feature(countryData, countryData.objects.countries);
-
-                countries.features.forEach(d => {
-                Object.assign(d.properties, rowByCode[d.id]);
-                    Object.assign(d.properties, rowByName[d.properties.name]);
-                });
-
-
-                const colorScale = d3.scaleThreshold()
-                    .domain([0.2, 0.25, 0.35, 0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
-                    .range(d3.schemeRdYlGn[10]);
-
-                g.selectAll('path')
-                    .data(countries.features)
-                    .enter().append('path')
-                    .attr('class', 'country')
-                    .attr('d', path)
-                    .attr('fill',
-                        function (d) { return d.properties["Working Population"] == undefined ? colorScale(0.2) : colorScale(d.properties["Working Population"]); } )
-                    .append('title')
-                    .text(d => //console.log(d)
-                        d.properties.name + " - " + (d.properties["Working Population"] == undefined ? 'Not Available' : new Intl.NumberFormat('en-US', {style: 'percent', minimumFractionDigits: 1 }).format(d.properties["Working Population"]))
-                                );
-
-
-            });
-
-
-
-
-    </script>-->
 
 
 </body>

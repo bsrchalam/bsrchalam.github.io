@@ -1,7 +1,7 @@
 body {
     background-color: white;
     border: 2px solid black;
-    width: 1000px;
+    width: 1010px;
     height: 750px;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
@@ -28,15 +28,16 @@ body {
     stroke-width: 0.05px;
 }
 
-    .country:hover {
-        fill: white;
-    }
+.country:hover {
+    fill: white;
+}
 
 .yearSelector {
     vertical-align: top;
     text-align: center;
-    width: 1000px;
+    width: 1005px;
     height: 30px;
+    
 }
 
 
@@ -44,6 +45,7 @@ body {
     margin-top: 10px;
     margin-bottom: 10px;
     display: inline;
+        
 }
 
 .worldmap {
@@ -51,10 +53,33 @@ body {
     
 }
 
-.tick {
-    cursor: pointer;
+.playpauseinput {
+    width: 32px;
+    height: 32px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: none;
+    background-color: white;
+    vertical-align: bottom;
 }
 
+
+    .playpauseinput.playinputUrl {
+        background-image: url(circled-play.png);
+    }
+
+    .playpauseinput.pauseinputUrl {
+        background-image: url(circled-pause.png);
+    }
+
+.mapHeader {
+    font-size: 18px;  
+    font-weight:bold;
+    color:white;
+}
+/*.tick {
+    cursor: pointer;
+}*/
 .tick text {
     font-size: 1em;
     fill: black;

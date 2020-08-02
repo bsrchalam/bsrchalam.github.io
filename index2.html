@@ -23,10 +23,11 @@
         <h1 class="header">World Population Demographics</h1>
         <div class="sceneMenu">
             <a href="index.html" class="notselected">Young Population</a>&nbsp;
-            <a href="index1.html" class="selected">Working Age Population</a>&nbsp;
-            <a href="index2.html" class="notselected">Elderly Population</a>
+            <a href="index1.html" class="notselected">Working Age Population</a>&nbsp;
+            <a href="index2.html" class="selected">Elderly Population</a>
         </div>
-        <h2 class="secondHeader">Working age population movements between 1950 - 2100</h2>
+        <h2 class="secondHeader">Elderly population movements between 1950 - 2100</h2>
+     
         <div class="yearSelector">
             <input type="button" class="playpauseinput playinputUrl" id="playPauseInput" value="" onclick="togglePlayPause(this.alt)" alt="play" />
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1950" name="year" value="1950">
@@ -84,9 +85,8 @@
         const colorLegendG = svg.append('g')
             .attr('transform', `translate(110,310)`);
 
-        const colorValue = d => d.properties["Working Population"];
-        
-       
+        const colorValue = d => d.properties["Elder Population"];
+
         function loadandFilterDataAndRenderMap(targetYear) {
             loadAndFilterData(targetYear, 'data.csv').then(countries => {
                 render(countries.features, targetYear);
@@ -96,8 +96,8 @@
         function render(features, targetYear) {
          
                colorScale //= d3.scaleThreshold() 
-                   .domain(features.map(colorValue))
-                   .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
+                   .domain(features.map(colorValue))                   
+                   .domain([0.5, 0.45, 0.4, 0.35, 0.3, 0.2])
                    .range(d3.schemeRdYlGn[6]);
 
                colorLegendG.call(colorLegend, {
@@ -127,14 +127,11 @@
                 .attr("class", "mapHeader")
                 .text(targetYear);
 
-         
         }
-
 
         let targetYear = "2020";
         document.getElementById(targetYear).click();
         document.getElementById("playPauseInput").click();
-
 
     </script>
 

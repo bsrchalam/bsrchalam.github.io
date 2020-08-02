@@ -7,8 +7,8 @@ function colorLegend (selection, props) {
         spacing,
         textOffset,
         backgroundRectWidth,
-        onClick,
-        selectedColorValue,
+        //onClick,
+        //selectedColorValue,
         targetYear
     } = props;
 
@@ -39,9 +39,9 @@ function colorLegend (selection, props) {
         .merge(legendGroups)
         .attr('transform', (d, i) =>
             `translate(0, ${i * spacing})`
-        )
-        .attr('opacity', d => (!selectedColorValue || d === selectedColorValue) ? 1 : 0.2 )
-        .on('click', d => onClick(d === selectedColorValue ? null : d, targetYear));
+        );
+        //.attr('opacity', d => (!selectedColorValue || d === selectedColorValue) ? 1 : 0.2);
+        //.on('click', d => onClick(d === selectedColorValue ? null : d, targetYear));
 
     legendGroups.exit().remove();
 
