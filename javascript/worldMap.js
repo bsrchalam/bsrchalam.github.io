@@ -53,5 +53,9 @@ function worldMap(selection,  props) {
             + (d.properties["Working Population"] === undefined ? 'Not Available' : new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 1 }).format(d.properties["Working Population"]))
         );
 
+    countryPathsEnter.append('title')
+        .text(d => d.properties.name + " - "
+            + (d.properties["Working Population"] === undefined ? 'Not Available' : new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 1 }).format(d.properties["Working Population"]))
+    );
 
 }
