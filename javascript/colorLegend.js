@@ -24,6 +24,7 @@ function colorLegend (selection, props) {
         .attr('fill', 'white')
         .attr('opacity', 0.8);
 
+    //console.log(colorScale.domain());
 
     const groups = selection.selectAll('.tick')
         .data(colorScale.domain());
@@ -55,7 +56,7 @@ function colorLegend (selection, props) {
 
     groupsEnter.append('text')
         .merge(groups.select('text'))
-        .text(d => d)
+        .text(d => new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 0 }).format(d))
         .attr('dy', '0.32em')
         .attr('x', textOffset);
 }

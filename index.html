@@ -1,12 +1,12 @@
 <html>
 
 <head>
-    <title>Working Population Demographics</title>
+    <title>Working Population - World</title>
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://d3js.org/d3.v5.js"></script>
     <script src="https://d3js.org/d3-array.v1.min.js"></script>
     <script src="https://d3js.org/d3-geo.v1.min.js"></script>
@@ -19,75 +19,16 @@
     <script src="javascript/worldMap.js"></script>
     <script src="javascript/loadData.js"></script>
 
-    <style>
-        body {
-            margin: 0px;
-            
-            background-color: white;
-            width: 1200px;
-            height: 600px;
-            
-        }
-
-        .sphere {
-            fill: darkblue;
-        }
-
-        .country {
-            stroke: black;
-            stroke-width: 0.05px;
-        }
-
-        .country:hover {
-            fill: white;
-        }
-
-        .yearSelector {
-            vertical-align:top;
-            display: inline-block;
-            width: 80px;
-            height: 500px;            
-            padding-top: 150px;
-            
-        }
-
-        .yearRadio {
-            margin-bottom: 10px;
-            margin-top: 10px;
-            border: solid 2px red;
-        }
-
-        .worldmap {
-            display: inline-block;
-            width: 1020px;
-            height: 500px;
-            
-        }
-
-        .tick text {
-            font-size: 1em;
-            fill: black;
-            font-family: sans-serif;
-        }
-
-        .tick circle {
-            stroke: black;
-            stroke-opacity: 0.5;
-        }
-
-    </style>
 </head>
 <body>
-    <div style="text-align:center">
-        <h1>Working Population Demographics (Ages: 16 - 55)</h1>
-        <div class="worldmap">
-            <svg width="1250" height="500"></svg>
-        </div>
+    <div>
+        <h1 class="header">World Population Demographics (Ages: 16 - 55)</h1>
+        <h2 class="secondHeader">Working Age Population Movements between 1950 - 2020</h2>
         <div class="yearSelector">
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1950" name="year" value="1950">
-            <label for="year">1950</label><br>
+            <label for="year">1950</label>
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1960" name="year" value="1960">
-            <label for="year">1960</label><br>
+            <label for="year">1960</label>
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1970" name="year" value="1970">
             <label for="year">1970</label>
             <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="1980" name="year" value="1980">
@@ -102,6 +43,12 @@
             <label for="year">2020</label>
         </div>
 
+        <div class="worldmap">
+            <svg width="1024" height="680"></svg>
+            <div>
+                <a href="index.html" class="selected" >1950-2020</a>&nbsp;<a href="index1.html"  class="notselected">2021-2100</a>
+            </div>
+        </div>
 
     </div>
 
@@ -112,7 +59,7 @@
 
         const svg = d3.select('svg');
 
-        const projection = d3.geoEqualEarth();
+        const projection = d3.geoEqualEarth().rotate([-15, 0]);
         const path = d3.geoPath(projection);
 
       
@@ -134,7 +81,7 @@
                      
        function render(targetYear) {
 
-           loadAndFilterData(targetYear).then(countries => {
+           loadAndFilterData(targetYear, 'data.csv').then(countries => {
 
                const colorScale = d3.scaleThreshold()
                    .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])

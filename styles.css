@@ -1,0 +1,85 @@
+body {
+    background-color: white;
+    border: 2px solid black;
+    width: 1000px;
+    height: 700px;
+}
+
+.header {
+    text-align: center;
+    height: 50px;
+    border: 2px solid black;
+    border-left: none;
+    border-right: none;
+}
+
+.secondHeader {
+    text-align: center;
+}
+
+.sphere {
+    fill: darkblue;
+}
+
+.country {
+    stroke: black;
+    stroke-width: 0.05px;
+}
+
+    .country:hover {
+        fill: white;
+    }
+
+.yearSelector {
+    vertical-align: top;
+    text-align: center;
+    width: 1000px;
+    height: 30px;
+}
+
+.yearRadio {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: inline;
+}
+
+.worldmap {
+    padding-left: 20px;
+}
+
+.tick text {
+    font-size: 1em;
+    fill: black;
+    font-family: sans-serif;
+}
+
+.tick circle {
+    stroke: black;
+    stroke-opacity: 0.5;
+}
+
+a.selected:link, a.selected:visited {
+    background-color: dodgerblue;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a.selected:hover, a.selected:active {
+    background-color: blue;
+}
+
+a.notselected:link, a.notselected:visited {
+    background-color: grey;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+a.notselected:hover, a.notselected:active {
+    background-color: blue;
+}

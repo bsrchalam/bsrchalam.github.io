@@ -1,0 +1,126 @@
+<html>
+
+<head>
+    <title>Working Population Demographics</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <script src="https://d3js.org/d3-array.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v2.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <script src="javascript/colorLegend.js"></script>
+    <script src="javascript/worldMap.js"></script>
+    <script src="javascript/loadData.js"></script>
+
+</head>
+<body>
+    <div>
+        <h1 class="header">World Population Demographics (Ages: 16 - 55)</h1>
+        <h2 class="secondHeader">Working Age Population Future Projections between 2021 - 2100</h2>
+        
+        <div class="yearSelector">
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2030" name="year" value="2030" checked="checked">
+            <label for="year">2030</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2040" name="year" value="2040">
+            <label for="year">2040</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2050" name="year" value="2050">
+            <label for="year">2050</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2060" name="year" value="2060">
+            <label for="year">2060</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2070" name="year" value="2070">
+            <label for="year">2070</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2080" name="year" value="2080">
+            <label for="year">2080</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2090" name="year" value="2090">
+            <label for="year">2090</label>
+            <input type="radio" class="yearRadio" onclick="changeYear(this.value)" id="2100" name="year" value="2100">
+            <label for="year">2100</label>
+        </div>
+
+        <div class="worldmap">
+            <svg width="1024" height="680"></svg>
+            <div>
+                <a href="index.html" class="notselected">1950-2020</a>&nbsp;<a href="index1.html" class="selected">2021-2100</a>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <script>
+
+
+
+        const svg = d3.select('svg');
+
+        const projection = d3.geoEqualEarth();
+        const path = d3.geoPath(projection);
+
+
+        const choroplethMapG = svg.append('g');
+
+        const colorLegendG = svg.append('g')
+            .attr('transform', `translate(110,310)`);
+
+        const colorValue = d => d.properties["Working Population"];
+
+        let selectedColorValue;
+
+        const onClick = d => {
+          selectedColorValue = d;
+          render();
+        };
+
+       render("2030");
+
+       function render(targetYear) {
+
+           loadAndFilterData(targetYear, 'data2.csv').then(countries => {
+
+               const colorScale = d3.scaleThreshold()
+                   .domain([0.40, 0.45, 0.5, 0.55, 0.60, 0.65])
+                   .range(d3.schemeRdYlGn[6]);
+
+               colorLegendG.call(colorLegend, {
+                   colorScale,
+                   circleRadius: 8,
+                   spacing: 20,
+                   textOffset: 20,
+                   backgroundRectWidth: 90,
+                   onClick,
+                   selectedColorValue
+               });
+
+               let features = countries.features;
+               choroplethMapG.call(worldMap, path, {
+                   features,
+                   colorScale,
+                   colorValue,
+                   selectedColorValue
+               });
+
+           });
+
+        }
+
+        function changeYear(year)
+        {
+            render(year);
+        }
+
+    </script>
+
+
+
+
+</body>
+
+</html>

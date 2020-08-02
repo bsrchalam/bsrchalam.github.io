@@ -1,9 +1,9 @@
    
 
-function loadAndFilterData(targetYear) {
+function loadAndFilterData(targetYear, dataFileCSVName) {
 
-  var promise =  Promise.all([
-        d3.csv('data.csv'),
+    var promise = Promise.all([        
+        d3.csv(dataFileCSVName),
         d3.json('countries-50m.json')
     ]).then(([allData, countryData]) => {
         var data = allData.filter(function (row) { return row.Year === targetYear; });
