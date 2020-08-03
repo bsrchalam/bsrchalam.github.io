@@ -2,8 +2,17 @@ body {
     background-color: white;
     border: 2px solid black;
     width: 1010px;
-    height: 830px;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+@media screen (max-width: 400px) {
+    body {
+        background-color: white;
+        border: 2px solid black;        
+        height: 1080px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
 }
 
 .header {
@@ -22,10 +31,9 @@ body {
 }
 
 .thirdHeader {
-    
-    margin: 1px 0px 1px 0px;
+    margin: 1px 0px 1px 0px ;
     text-align: left;
-    
+    font-size: 0.8em !important;
 }
 
 .sphere {
@@ -61,7 +69,7 @@ body {
 
 .worldmap {
     padding-left: 20px;
-    
+    padding-bottom: 50px;
 }
 
 .playpauseinput {
